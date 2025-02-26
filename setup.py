@@ -30,8 +30,8 @@ setup(
     license='Touchlab Limited',
     tests_require=['pytest'],
     # Add your scripts here
-    scripts=['scripts/scripts_file',
-             ],
+    # scripts=['scripts/scripts_file',
+    #          ],
     entry_points={
         'console_scripts': [],
     },

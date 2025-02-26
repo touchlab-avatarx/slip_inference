@@ -15,6 +15,8 @@ timestamps = np.linspace(0, 100, 1000)  # Simulated timestamps
 current_index = 0  # Red line position (current time step)
 green_line_index = 500  # Green line position
 selected_line = "red"  # Which line is selected (red or green)
+zoom_factor = 0.9  # Factor for zooming in/out
+x_limits = [timestamps[0], timestamps[-1]]  # Initial zoom limits
 
 # Initialize Plot
 fig, axes = plt.subplots(4, 1, figsize=(12, 10))
@@ -47,6 +49,7 @@ axes[3].set_ylim(0, 1)
 axes[3].set_title(f"arr3 at Time {timestamps[current_index]:.2f}")
 axes[3].set_xlabel("Index")
 
+
 # --- Function to Update Plots ---
 def update_plots():
     """ Update arr2 and arr3 plots based on the selected timestamp (red or green). """
@@ -74,6 +77,7 @@ def update_plots():
 
     fig.canvas.draw_idle()
 
+
 # --- Handle Key Press Events ---
 def on_key(event):
     """ Move the selected line using left/right arrow keys and clip with 'C'. """
@@ -98,7 +102,9 @@ def on_key(event):
     elif event.key == "c":
         clip_between_lines()
 
+
 fig.canvas.mpl_connect("key_press_event", on_key)
+
 
 # --- Select Which Line is Active by Clicking ---
 def on_click(event):
@@ -122,7 +128,42 @@ def on_click(event):
     print(f"Selected Line: {selected_line.upper()}")
     update_plots()
 
+
 fig.canvas.mpl_connect("button_press_event", on_click)
+
+
+# --- Zoom Functionality Based on Selected Line ---
+def on_scroll(event):
+    """ Zoom in/out while keeping the selected line fixed in view. """
+    global x_limits
+
+    # Use the selected line as the zoom reference
+    zoom_ref = timestamps[current_index] if selected_line == "red" else timestamps[green_line_index]
+
+    x_min, x_max = x_limits
+
+    if selected_line == "red":
+        if event.step > 0:  # Zoom in
+            x_min = max(timestamps[0], zoom_ref - (zoom_ref - x_min) * zoom_factor)
+        else:  # Zoom out
+            x_min = max(timestamps[0], zoom_ref - (zoom_ref - x_min) / zoom_factor)
+    else:  # Zoom relative to green
+        if event.step > 0:  # Zoom in
+            x_max = min(timestamps[-1], zoom_ref + (x_max - zoom_ref) * zoom_factor)
+        else:  # Zoom out
+            x_max = min(timestamps[-1], zoom_ref + (x_max - zoom_ref) / zoom_factor)
+
+    x_limits = [x_min, x_max]
+
+    # Apply zoom to both arr1 and arr4 plots
+    axes[0].set_xlim(x_limits)
+    axes[1].set_xlim(x_limits)
+
+    fig.canvas.draw_idle()
+
+
+fig.canvas.mpl_connect("scroll_event", on_scroll)
+
 
 # --- Annotation (Rectangle Selection on arr1 or arr4) ---
 def on_select(eclick, erelease):
@@ -136,6 +177,8 @@ def on_select(eclick, erelease):
 selector1 = RectangleSelector(axes[0], on_select, useblit=True, interactive=True, rectprops=dict(alpha=0.5, facecolor="red"))
 selector2 = RectangleSelector(axes[1], on_select, useblit=True, interactive=True, rectprops=dict(alpha=0.5, facecolor="red"))
 
+
+
 # --- Clip Data Between Red and Green Lines ---
 def clip_between_lines():
     """ Clip data between the red and green lines on both arr1 and arr4. """
@@ -147,7 +190,9 @@ def clip_between_lines():
     clipped_arr4 = arr4[idx_min:idx_max]
 
     print(f"Clipped Between {timestamps[idx_min]:.2f} and {timestamps[idx_max]:.2f}")
-    print(f"Clipped Shapes: arr1 {clipped_arr1.shape}, arr2 {clipped_arr2.shape}, arr3 {clipped_arr3.shape}, arr4 {clipped_arr4.shape}")
+    print(
+        f"Clipped Shapes: arr1 {clipped_arr1.shape}, arr2 {clipped_arr2.shape}, arr3 {clipped_arr3.shape}, arr4 {clipped_arr4.shape}")
+
 
 plt.tight_layout()
 plt.show()

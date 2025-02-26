@@ -5,10 +5,10 @@ import os
 from glob import glob
 from setuptools import find_packages, setup
 
-package_name = 'your_package_name'
-package_description = 'A description of your package'
-maintainer_name = 'your name'
-maintainer_email = 'your_email@touchlab.io'
+package_name = 'touch_annotator'
+package_description = 'A package to annotate touch data'
+maintainer_name = 'vishal'
+maintainer_email = 'vishal@touchlab.io'
 
 
 setup(

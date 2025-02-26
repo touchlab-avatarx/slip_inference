@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="2">
-  <name>your_package_name</name>
+  <name>touch_annotator</name>
   <version>0.0.0</version>
-  <description>A description of your package</description>
-  <maintainer email="your_email@touchlab.io">Your Name</maintainer>
+  <description>A package to annotate touch data</description>
+  <maintainer email="vishal@touchlab.io">Your Name</maintainer>
   <license>Touchlab Limited</license>
 
   <!-- Add your dependancies here -->

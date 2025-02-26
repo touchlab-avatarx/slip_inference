@@ -1,0 +1,6 @@
+repositories:
+# Example
+  your_repository_name:
+    type: git
+    url: git@github.com:touchlab-avatarx/your_repository_name.git
+    version: main

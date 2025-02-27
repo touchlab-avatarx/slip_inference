@@ -103,37 +103,3 @@ class RosBagParser:
             }
         )
 
-
-# Example usage
-if __name__ == "__main__":
-    # Specify the path to your ROS2 bag file
-
-    bag_file_path = "/home/container/ros2/src/rig_controller/rig_controller/bag/rig1_bag1_iteration_0_20250212_122326"
-
-    # Create an instance of the parser
-    parser = RosBagParser(bag_path=bag_file_path)
-
-    try:
-        # Parse the bag file without specifying topics (parses all topics)
-        parser.parse(
-            topics_of_interest=["/all/sensor_all", "/joint_states", "/all/raw"]
-        )
-
-        # Print a summary of parsed topics
-        parser.print_summary()
-
-        # List available topics from metadata
-        available_topics = parser.get_available_topics()
-        print(f"\nAvailable topics in the bag file: {available_topics}")
-
-        # Access messages for a specific topic
-        target_topic = "/all/sensor_all"  # Replace with a topic of interest
-        messages = parser.get_topic_messages(target_topic)
-        if messages:
-            print(f"\nFirst message on {target_topic}:")
-            print(messages[0])  # (msg, timestamp)
-        else:
-            print(f"No messages found for topic: {target_topic}")
-
-    except FileNotFoundError as e:
-        print(e)

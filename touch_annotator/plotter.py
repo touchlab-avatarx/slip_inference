@@ -37,7 +37,7 @@ class InteractivePlotter:
         self.normal_lines = []
         for i, array in enumerate(self.normal_arrays):
             line, = self.axes[len(self.interactive_arrays) + i].plot(array[self.current_index], marker='o')
-            self.axes[len(self.interactive_arrays) + i].set_ylim(0, 1)
+            self.axes[len(self.interactive_arrays) + i].set_ylim(1000, 10000)
             self.axes[len(self.interactive_arrays) + i].set_title(f"Normal Data {i+1} at Time {self.timestamps[self.current_index]:.2f}")
             self.axes[len(self.interactive_arrays) + i].set_xlabel("Index")
             self.normal_lines.append(line)
@@ -127,11 +127,9 @@ class InteractivePlotter:
 def main():
     np.random.seed(42)
     timestamps = np.linspace(0, 100, 1000)
-    arr1 = np.random.rand(1000, 10)
-    arr2 = np.random.rand(1000, 10)
-    arr3 = np.random.rand(1000, 10)
-    arr4 = np.random.rand(1000, 10)
-    InteractivePlotter(timestamps, [arr1, arr4], [arr2, arr3])
+    arr1 = 900 + (1000 - 900) * np.random.rand(1000, 10)
+    arr2 = 900 + (1000 - 900) * np.random.rand(1000, 10)
+    InteractivePlotter(timestamps, [arr1, arr2], [arr1, arr2])
 
 if __name__ == "__main__":
     main()

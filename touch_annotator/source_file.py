@@ -6,6 +6,9 @@
 from bag_parser import RosBagParser
 from ros_to_numpy import RosMsgToNumpyConverter
 from plotter import InteractivePlotter
+from safetensors.numpy import save_file, load_file
+import numpy as np
+
 
 if __name__ == "__main__":
     # Specify the path to your ROS2 bag file
@@ -45,8 +48,14 @@ if __name__ == "__main__":
         ros_num = RosMsgToNumpyConverter(parsed_message)
 
         numpy_topic_data, timestamps = ros_num.convert_to_numpy()
+        numpy_topic_data["timestamps"] = timestamps
+        save_file(numpy_topic_data, "numpy_topic_data.safetensors")
 
-        InteractivePlotter(timestamps=timestamps, interactive_arrays=[numpy_topic_data["/robotiq/frames_transformer/data_raw"]], normal_arrays= [numpy_topic_data["/robotiq/frames_transformer/data_raw"]])
+        loaded_data = load_file("numpy_topic_data.safetensors")
+        numpy_data = {k: np.array(v) for k, v in loaded_data.items()}
+        print(numpy_data["timestamps"].shape)  # (1000, 10)
+        # InteractivePlotter(timestamps=timestamps, interactive_arrays=[numpy_topic_data["/robotiq/frames_transformer/data_raw"]], normal_arrays= [numpy_topic_data["/robotiq/frames_transformer/data_raw"]])
+        pass
 
 
     except FileNotFoundError as e:

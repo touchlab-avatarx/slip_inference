@@ -4,7 +4,8 @@
 # Unauthorized copying or modifications of this file, via any medium is strictly prohibited.
 
 from bag_parser import RosBagParser
-
+from ros_to_numpy import RosMsgToNumpyConverter
+from plotter import InteractivePlotter
 
 if __name__ == "__main__":
     # Specify the path to your ROS2 bag file
@@ -41,7 +42,12 @@ if __name__ == "__main__":
             for target_topic in topic_of_interest
         }
 
-        pass
+        ros_num = RosMsgToNumpyConverter(parsed_message)
+
+        numpy_topic_data, timestamps = ros_num.convert_to_numpy()
+
+        InteractivePlotter(timestamps=timestamps, interactive_arrays=[numpy_topic_data["/robotiq/frames_transformer/data_raw"]], normal_arrays= [numpy_topic_data["/robotiq/frames_transformer/data_raw"]])
+
 
     except FileNotFoundError as e:
         print(e)

@@ -5,7 +5,7 @@ import os
 from glob import glob
 from setuptools import find_packages, setup
 
-package_name = 'touch_annotator'
+package_name = 'slip_inference'
 package_description = 'A package to annotate touch data'
 maintainer_name = 'vishal'
 maintainer_email = 'vishal@touchlab.io'
@@ -30,7 +30,7 @@ setup(
     license='Touchlab Limited',
     tests_require=['pytest'],
     # Add your scripts here
-    scripts=['scripts/scripts_file',
+    scripts=['scripts/script_file',
              ],
     entry_points={
         'console_scripts': [],

@@ -73,8 +73,10 @@ class SlipInferenceNode(Node):
             output = self.model(input_tensor)
             probs = torch.softmax(output, dim=1)  # convert to probabilities
             predicted_class = probs.argmax(dim=1)
+            class_map = {0: "touch", 1: "slip", 2: "no_touch"}
+            label = class_map[predicted_class.item()]
 
-        self.get_logger().info(f"Inference Output: {predicted_class}")
+        self.get_logger().info(f"Inference Output: {label}")
 
 
 def main(args=None):

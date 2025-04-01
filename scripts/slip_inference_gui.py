@@ -6,13 +6,13 @@ import tkinter as tk
 from tkinter import font as tkfont
 
 class SensorGUI(Node):
-    def __init__(self):
+    def __init__(self, topic_name='slip_state'):
         super().__init__('slip_detection_gui')
         
         # ROS2 Subscription
         self.subscription = self.create_subscription(
             Int32,
-            '/robotiq/rig1_all/raw',  # Topic name
+            topic_name,  # Topic name
             self.topic_callback,
             10)
         self.subscription  # Prevent unused variable warning
@@ -20,6 +20,7 @@ class SensorGUI(Node):
         # Initialize Tkinter
         self.root = tk.Tk()
         self.root.title("SLIP DETECTION")
+        
         
         # Fullscreen configuration
         self.fullscreen = True
@@ -62,27 +63,6 @@ class SensorGUI(Node):
                                     pady=15)
         self.heading_label.pack(side=tk.LEFT, expand=True)
 
-        # Topic monitoring label
-        self.topic_label = tk.Label(self.heading_frame,
-                                    text="Subscribed to: /robotiq/rig1_all/raw",
-                                    font=tkfont.Font(size=12),
-                                    bg="#333333",
-                                    fg="yellow")
-        self.topic_label.pack(side=tk.BOTTOM, pady=5)
-        
-        # # Exit button
-        # self.exit_button = tk.Button(self.heading_frame, text="Exit (Esc)", 
-        #                             command=self.clean_exit,
-        #                             bg="#555555",
-        #                             fg="white",
-        #                             activebackground="red",
-        #                             bd=0)
-        # self.exit_button.pack(side=tk.RIGHT, padx=10)
-
-        # # Status indicator frame
-        # self.status_frame = tk.Frame(self.main_container, bg="#333333")
-        # self.status_frame.pack(expand=True, fill=tk.BOTH, padx=50, pady=20)
-
         # Sensor labels frame
         self.center_frame = tk.Frame(self.main_container)
         self.center_frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
@@ -122,7 +102,7 @@ class SensorGUI(Node):
         self.root.bind('<Escape>', lambda e: self.clean_exit())
 
     def topic_callback(self, msg):
-        """Handle incoming ROS2 messages from /robotiq/rig1_all/raw"""
+        """Handle incoming ROS2 messages from slip_state topic"""
         self.current_state = msg.data
         self.last_update_time = self.get_clock().now()
         
@@ -140,8 +120,8 @@ class SensorGUI(Node):
             self.no_touch_label.config(bg=self.active_color)
             self.get_logger().info("NO TOUCH detected")
         
-        # Update last message time display
-        self.topic_label.config(text=f"Last message: {self.get_clock().now().to_msg().sec} sec")
+        # # Update last message time display
+        # self.topic_label.config(text=f"Last message: {self.get_clock().now().to_msg().sec} sec")
     
     def reset_labels(self):
         """Reset all labels to inactive state"""
@@ -173,7 +153,7 @@ def main(args=None):
     rclpy.init(args=args)
     
     try:
-        gui_node = SensorGUI()
+        gui_node = SensorGUI(topic_name='slip_state')
         rclpy.spin(gui_node)
     except KeyboardInterrupt:
         pass

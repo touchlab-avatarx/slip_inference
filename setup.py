@@ -6,7 +6,7 @@ from glob import glob
 from setuptools import find_packages, setup
 
 package_name = 'slip_inference'
-package_description = 'A package to annotate touch data'
+package_description = 'An inference package for touch models'
 maintainer_name = 'vishal'
 maintainer_email = 'vishal@touchlab.io'
 

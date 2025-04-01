@@ -30,9 +30,8 @@ setup(
     license="Touchlab Limited",
     tests_require=["pytest"],
     # Add your gui here
-    scripts=[
-        "gui/script_file",
-    ],
+    # scripts=[
+    # ],
     entry_points={
         "console_scripts": [],
     },

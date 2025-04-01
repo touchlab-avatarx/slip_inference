@@ -5,6 +5,9 @@ import numpy as np
 from collections import deque
 import torch
 
+from std_msgs.msg import Int32
+
+
 
 class SlipInferenceNode(Node):
     def __init__(self):
@@ -15,6 +18,8 @@ class SlipInferenceNode(Node):
             self.inference_callback,
             10,
         )
+
+        self.publisher = self.create_publisher(Int32, 'slip_state', 10)
 
         # Load the PyTorch model
         self.model = torch.jit.load("/home/container/ros2/src/slip_inference/models/slipv1_2025-04-01_15-10-50.pt")
@@ -27,6 +32,9 @@ class SlipInferenceNode(Node):
         self.data_queue = deque(maxlen=self.window_size)
 
         self.get_logger().info("Slip Inference Node started.")
+
+        # self.root = tk.Tk()
+        # self.app = SlipGUI(self.root)
 
     def inference_callback(self, msg):
         # Convert incoming message (length 32) to numpy array
@@ -76,7 +84,12 @@ class SlipInferenceNode(Node):
             class_map = {0: "touch", 1: "slip", 2: "no_touch"}
             label = class_map[predicted_class.item()]
 
-        self.get_logger().info(f"Inference Output: {label}")
+        self.get_logger().info(f"Inference Output: {predicted_class.item()}")
+        msg = Int32()
+        msg.data = predicted_class.item()
+        self.publisher.publish(msg)
+
+
 
 
 def main(args=None):

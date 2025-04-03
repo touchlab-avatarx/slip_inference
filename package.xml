@@ -7,7 +7,7 @@
   <maintainer email="vishal@touchlab.io">Your Name</maintainer>
   <license>Touchlab Limited</license>
 
-  <!-- Add your dependancies here -->
+  <depend>touchlab_msgs</depend>
   <depend>rclpy</depend>
 
   <export>

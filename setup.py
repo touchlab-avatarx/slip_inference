@@ -29,10 +29,9 @@ setup(
     description=package_description,
     license="Touchlab Limited",
     tests_require=["pytest"],
-    # Add your gui here
-    # scripts=[
-    # ],
     entry_points={
-        "console_scripts": [],
+        "console_scripts": [
+            'inference_node = slip_inference.inference_node:main', 
+        ],
     },
 )
